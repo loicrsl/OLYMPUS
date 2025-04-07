@@ -1,0 +1,71 @@
+/* animations.css */
+
+/* Loader Animation */
+@keyframes loaderAnimation {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+/* Overlay Animation */
+@keyframes overlayAnim {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Autres animations */
+.intro-screen {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: opacity 1.5s ease;
+  z-index: 999;
+}
+
+.intro-content {
+  text-align: center;
+  color: white;
+  animation: fadeIn 1.5s ease-out forwards;
+}
+
+.intro-title {
+  font-size: 4rem;
+  font-family: 'Georgia', serif;
+  text-shadow: 0 0 15px #fff4cc;
+  margin-bottom: 2rem;
+}
+
+.enter-button {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.enter-button:hover {
+  background: white;
+  color: black;
+  box-shadow: 0 0 15px #fff4cc;
+}
+
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}

@@ -1,0 +1,84 @@
+.gallery-wrapper {
+  padding: 4rem 2rem;
+  background: #000;
+  color: #fff;
+  font-family: serif;
+}
+
+.gallery-title {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
+.gallery-container {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 3rem;
+}
+
+.gallery-item {
+  min-width: 320px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
+}
+
+.frame {
+  position: relative;
+  border: 2px solid #fff;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.frame img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.plaque {
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  color: #000;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.zoom-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: zoom-out;
+}
+
+.zoom-modal img {
+  max-width: 80%;
+  max-height: 70vh;
+  border-radius: 12px;
+}
+
+.zoom-title {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
