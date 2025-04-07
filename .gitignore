@@ -1,21 +1,51 @@
-# Node modules
-node_modules/
+# ──────────────🌐 DEPENDENCIES ──────────────
+node_modules/        # All node dependencies
 
-# Build output
+# ──────────────📦 BUILD FILES ──────────────
 build/
 dist/
 
-# Logs
+# ──────────────🧪 TEST / COVERAGE ──────────────
+coverage/
+*.lcov
+
+# ──────────────⚙️ ENV & CONFIG ──────────────
+.env
+.env.*               # Ex: .env.local, .env.dev, etc.
+
+# ──────────────🧹 SYSTEM FILES ──────────────
+.DS_Store            # macOS
+Thumbs.db            # Windows
+.vscode/             # Optional: dev env configs
+
+# ──────────────📑 LOG FILES ──────────────
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environnement
-.env
-
-# Fichiers systèmes
-.DS_Store
-
-# Fichiers de lock (tu peux garder l'un ou l'autre)
+# ──────────────🔒 LOCK FILES ──────────────
+# Garde uniquement l’un ou l’autre selon ton gestionnaire de paquets
 package-lock.json
 yarn.lock
+
+# ──────────────🎥 HEAVY MEDIA FILES ──────────────
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wav
+*.flac
+*.zip
+*.rar
+*.7z
+
+# ──────────────📁 HEAVY FOLDER IGNORE ──────────────
+src/assets/video/
+src/assets/backup/
+src/assets/temp/
+public/video/
+
+# ──────────────🔧 MISC ──────────────
+*.log
+*.bak
+*.tmp
