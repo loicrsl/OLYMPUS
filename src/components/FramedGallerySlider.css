@@ -1,400 +1,219 @@
-/**************************************************************
- * ProjectGallery.css - Corrigée
- * => Fond marbre (path exact), Titre en or direct (#d4af37)
- * => Mobile => hauteur auto
- * => Artwork "objectFit=contain"
- **************************************************************/
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
- @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+.museum-gallery {
+  width: 100%;
+  min-height: 100vh;
+  padding: 90px 0 50px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
- .museum-gallery {
-   width: 100%;
-   min-height: 100vh;
-   padding: 90px 0 50px;
-   position: relative;
-   overflow: hidden;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
- }
- 
- /* Correction du path, assure-toi que:
-    => /src/assets/textures/marble-background.jpg
-    => C'est EXACTEMENT ce nom
- */
- .marble-background {
+.marble-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('../assets/textures/marble-background.jpg') center/cover no-repeat;
-  z-index: -1;
-  opacity: 0.8;
+  background-image: url('../assets/textures/marble-background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
+  opacity: 0.6;
 }
- 
- .light .marble-background {
-   background-blend-mode: overlay;
- }
- .dark .marble-background {
-   background-blend-mode: soft-light;
- }
- 
- /* Header - Titre or direct */
- .gallery-header {
-   text-align: center;
-   margin-bottom: 40px;
-   width: 100%;
- }
- 
- /* Titre => or direct #d4af37 => plus de gradient */
- .gallery-title {
-   font-family: 'Playfair Display', serif;
-   font-size: 3rem;
-   font-weight: 700;
-   letter-spacing: 3px;
-   color: #d4af37; /* or direct */
-   text-shadow: 0 0 4px rgba(212,175,55,0.4);
- }
- 
- .dark .gallery-title {
-   text-shadow: 0 0 5px rgba(212,175,55,0.7);
- }
- 
- /* Museum view => Desktop => on laisse 70vh */
- .museum-view {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   width: 100%;
-   max-width: 1400px;
-   height: 70vh;
-   min-height: 500px;
-   position: relative;
-   padding: 1rem;
- }
- 
- .artwork-display-container {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   /* let the height be free */
- }
- 
- .artwork-display {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   position: relative;
- }
- 
- /* Plaque inchangée */
- .artwork-plaque {
-   width: 80%;
-   max-width: 600px;
-   margin-top: 30px;
-   background: linear-gradient(to right, #d4af37, #f5f5f5, #d4af37);
-   padding: 2px;
-   border-radius: 4px;
-   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
- }
- 
- .plaque-content {
-   background-color: #f5f5f5;
-   padding: 20px 25px;
-   text-align: center;
-   border-radius: 2px;
- }
- 
- .dark .plaque-content {
-   background-color: #292929;
-   color: #f5f5f5;
- }
- 
- .artwork-title {
-   font-family: 'Playfair Display', serif;
-   font-size: 1.8rem;
-   margin: 0 0 5px;
-   color: #d4af37;
- }
- 
- .artwork-creator {
-   font-family: 'Cormorant Garamond', serif;
-   font-style: italic;
-   font-weight: 500;
-   font-size: 1.3rem;
-   margin: 0 0 8px;
-   color: #333;
- }
- 
- .dark .artwork-creator {
-   color: #e0e0e0;
- }
- 
- .artwork-location {
-   font-family: 'Cormorant Garamond', serif;
-   font-size: 1rem;
-   margin: 0 0 15px;
-   color: #666;
- }
- 
- .dark .artwork-location {
-   color: #bbb;
- }
- 
- .info-button {
-   background: linear-gradient(45deg, #d4af37, #f9f295, #d4af37);
-   color: #333;
-   border: none;
-   padding: 8px 16px;
-   font-family: 'Cormorant Garamond', serif;
-   font-size: 1rem;
-   cursor: pointer;
-   border-radius: 4px;
-   transition: all 0.3s ease;
- }
- .info-button:hover {
-   box-shadow: 0 0 10px rgba(212,175,55,0.6);
-   transform: translateY(-2px);
- }
- 
- /* Navigation Buttons */
- .nav-button {
-   width: 50px;
-   height: 50px;
-   border-radius: 50%;
-   background: rgba(255,255,255,0.25);
-   border: 1px solid rgba(212,175,55,0.5);
-   color: #d4af37;
-   font-size: 1.8rem;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   cursor: pointer;
-   transition: all 0.3s ease;
-   backdrop-filter: blur(4px);
-   margin: 0 20px;
- }
- .nav-button:hover {
-   background: rgba(212,175,55,0.2);
-   box-shadow: 0 0 15px rgba(212,175,55,0.4);
- }
- .prev-button {
-   padding-right: 2px;
- }
- .next-button {
-   padding-left: 2px;
- }
- 
- /* Pagination */
- .gallery-pagination {
-   display: flex;
-   justify-content: center;
-   margin-top: 20px;
- }
- .pagination-dot {
-   width: 10px;
-   height: 10px;
-   border-radius: 50%;
-   background-color: rgba(212,175,55,0.3);
-   border: none;
-   margin: 0 5px;
-   cursor: pointer;
-   transition: all 0.3s ease;
- }
- .pagination-dot.active {
-   background-color: #d4af37;
-   transform: scale(1.2);
-   box-shadow: 0 0 6px rgba(212,175,55,0.4);
- }
- .pagination-dot:hover {
-   background-color: rgba(212,175,55,0.7);
- }
- 
- /* Modal */
- .artwork-modal-overlay {
-   position: fixed;
-   top: 0; left: 0;
-   width: 100%;
-   height: 100%;
-   background-color: rgba(0,0,0,0.85);
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   z-index: 1000;
-   backdrop-filter: blur(10px);
- }
- 
- .artwork-modal {
-   width: 90%;
-   max-width: 1100px;
-   height: 85vh;
-   display: flex;
-   background: linear-gradient(135deg, rgba(20,20,25,0.9), rgba(40,40,45,0.9));
-   border: 1px solid rgba(212,175,55,0.5);
-   box-shadow:
-     0 0 30px rgba(212,175,55,0.3),
-     0 0 80px rgba(0,0,0,0.5);
-   position: relative;
-   overflow: hidden;
-   border-radius: 8px;
- }
- 
- .modal-close-btn {
-   position: absolute;
-   top: 15px;
-   right: 15px;
-   width: 40px;
-   height: 40px;
-   background: rgba(0,0,0,0.5);
-   border: 1px solid rgba(212,175,55,0.5);
-   color: #d4af37;
-   font-size: 1.5rem;
-   border-radius: 50%;
-   cursor: pointer;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   z-index: 10;
-   transition: all 0.3s ease;
- }
- .modal-close-btn:hover {
-   background: rgba(212,175,55,0.2);
-   box-shadow: 0 0 15px rgba(212,175,55,0.6);
- }
- 
- .modal-frame {
-   flex: 1;
-   padding: 30px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   position: relative;
- }
- .modal-artwork-image {
-   max-width: 100%;
-   max-height: 80vh;
-   object-fit: contain;
-   box-shadow: 0 0 30px rgba(0,0,0,0.5);
-   border: 8px solid;
-   border-image: linear-gradient(45deg, #d4af37, #f9f295, #d4af37) 1;
- }
- 
- .modal-artwork-info {
-   width: 35%;
-   padding: 40px 30px;
-   color: #fff;
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   background: rgba(0,0,0,0.4);
-   border-left: 1px solid rgba(212,175,55,0.3);
- }
- .modal-artwork-info h2 {
-   font-family: 'Playfair Display', serif;
-   font-size: 2rem;
-   margin-bottom: 10px;
-   color: #d4af37;
- }
- .modal-artwork-info h3 {
-   font-family: 'Cormorant Garamond', serif;
-   font-size: 1.2rem;
-   font-weight: 400;
-   font-style: italic;
-   margin-bottom: 10px;
-   color: #f0f0f0;
- }
- .modal-artwork-location {
-   font-family: 'Cormorant Garamond', serif;
-   font-size: 1rem;
-   margin-bottom: 20px;
-   color: #bbb;
- }
- .modal-artwork-description {
-   font-family: 'Cormorant Garamond', serif;
-   font-size: 1.1rem;
-   line-height: 1.6;
-   color: #e0e0e0;
- }
- 
- /* Loading */
- .gallery-loading {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   height: 100vh;
-   width: 100%;
- }
- 
- /* Colonnes décoratives latérales */
- .decorative-column {
-   position: fixed;
-   bottom: 0;
-   width: 100px;
-   height: 100%;
-   background-image: url('https://cdnjs.cloudflare.com/ajax/libs/placeholdit/100x800/column');
-   background-repeat: no-repeat;
-   background-position: bottom;
-   background-size: contain;
-   opacity: 0.2;
-   pointer-events: none;
-   z-index: -1;
- }
- .left-column {
-   left: 0;
- }
- .right-column {
-   right: 0;
-   transform: scaleX(-1);
- }
- 
- /* Media queries "pro" */
- @media (max-width: 992px) {
-   .museum-view {
-     height: auto; /* plus de 70vh forcé sur tablette */
-     min-height: 600px;
-   }
-   .artwork-modal {
-     flex-direction: column;
-     height: auto;
-     max-height: 90vh;
-     overflow-y: auto;
-   }
-   .modal-frame {
-     width: 100%;
-     height: auto;
-     padding: 20px;
-   }
-   .modal-artwork-info {
-     width: 100%;
-     border-left: none;
-     border-top: 1px solid rgba(212,175,55,0.3);
-     padding: 30px 20px;
-   }
- }
- 
- @media (max-width: 768px) {
-   .museum-view {
-     flex-direction: column;
-     height: auto; 
-     padding: 0 20px;
-   }
-   .nav-button {
-     position: static;
-     margin: 0.5rem;
-     transform: none;
-   }
- }
- 
- @media (max-width: 576px) {
-   .gallery-title {
-     font-size: 1.8rem;
-   }
-   .artwork-title {
-     font-size: 1.4rem;
-   }
-   .artwork-creator {
-     font-size: 1.1rem;
-   }
- }
- 
+
+.gallery-header {
+  text-align: center;
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.gallery-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #d4af37;
+  text-shadow: 0 0 4px rgba(212,175,55,0.4);
+}
+
+.dark .gallery-title {
+  text-shadow: 0 0 6px rgba(212,175,55,0.7);
+}
+
+.museum-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  height: auto;
+  min-height: 500px;
+  position: relative;
+  padding: 1rem;
+}
+
+.artwork-display-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.artwork-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.artwork-plaque {
+  width: 80%;
+  max-width: 600px;
+  margin-top: 30px;
+  background: linear-gradient(to right, #d4af37, #f5f5f5, #d4af37);
+  padding: 2px;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.plaque-content {
+  background-color: #f5f5f5;
+  padding: 20px 25px;
+  text-align: center;
+  border-radius: 2px;
+}
+
+.dark .plaque-content {
+  background-color: #292929;
+  color: #f5f5f5;
+}
+
+.artwork-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  margin: 0 0 5px;
+  color: #d4af37;
+}
+
+.artwork-creator {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.3rem;
+  margin: 0 0 8px;
+  color: #333;
+}
+
+.dark .artwork-creator {
+  color: #e0e0e0;
+}
+
+.artwork-location {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  margin: 0 0 15px;
+  color: #666;
+}
+
+.dark .artwork-location {
+  color: #bbb;
+}
+
+.info-button {
+  background: linear-gradient(45deg, #d4af37, #f9f295, #d4af37);
+  color: #333;
+  border: none;
+  padding: 8px 16px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.info-button:hover {
+  box-shadow: 0 0 10px rgba(212,175,55,0.6);
+  transform: translateY(-2px);
+}
+
+.nav-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  border: 1px solid rgba(212,175,55,0.5);
+  color: #d4af37;
+  font-size: 1.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  margin: 0 20px;
+}
+
+.nav-button:hover {
+  background: rgba(212,175,55,0.2);
+  box-shadow: 0 0 15px rgba(212,175,55,0.4);
+}
+
+.gallery-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(212,175,55,0.3);
+  border: none;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-dot.active {
+  background-color: #d4af37;
+  transform: scale(1.2);
+  box-shadow: 0 0 6px rgba(212,175,55,0.4);
+}
+
+.gallery-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+@media (max-width: 992px) {
+  .museum-view {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .artwork-plaque {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .gallery-title {
+    font-size: 2rem;
+  }
+
+  .artwork-title {
+    font-size: 1.5rem;
+  }
+
+  .artwork-creator {
+    font-size: 1.2rem;
+  }
+}

@@ -1,165 +1,61 @@
-// ProjectGallery.jsx - Version carrousel
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './ProjectGallery.css';
-import Parallax from './Parallax';
+import frameSquare from '../assets/frames/frame-square.png';
+import frameSquareMask from '../assets/frames/frame-square-mask.png';
 import { playClickSound } from '../utils/audioManager';
 
 const ProjectGallery = ({ isLightMode }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [artworks, setArtworks] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const galleryRef = useRef(null);
-  
-  // Simuler le chargement des données des œuvres
+
   useEffect(() => {
-    // Données factices pour la démo
-    const demoArtworks = [
+    const brigliaArtworks = [
       {
         id: 1,
-        title: "La Nuit Étoilée",
-        artist: "Vincent van Gogh",
-        year: "1889",
-        description: "\"Quand je regarde les étoiles et avec elles mon être tout entier, je suis partie d'une de ces étoiles.\"",
-        image: "/api/placeholder/600/600",
-        location: "MoMA, New York"
+        title: "Artwork 1",
+        artist: "77Briglia",
+        year: "2023",
+        description: "Première création Behance pour la galerie Olympus.",
+        image: "https://mir-s3-cdn-cf.behance.net/project_modules/2800/9aef2a105305975.643a08df037b7.png",
+        location: "Paris, France"
       },
       {
         id: 2,
-        title: "La Création d'Adam",
-        artist: "Michel-Ange",
-        year: "1512",
-        description: "Un fragment emblématique de la fresque du plafond de la chapelle Sixtine, représentant Dieu donnant la vie à Adam par le toucher.",
-        image: "/api/placeholder/800/500",
-        location: "Chapelle Sixtine, Vatican"
+        title: "Artwork 2",
+        artist: "77Briglia",
+        year: "2023",
+        description: "Deuxième visuel inspiration mode & design.",
+        image: "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/3a336f119958217.67b2bea8c64bf.jpg",
+        location: "London, UK"
       },
       {
         id: 3,
-        title: "La Joconde",
-        artist: "Léonard de Vinci",
-        year: "1503",
-        description: "Un portrait mondialement célèbre dont le sourire reste mystérieux, chef-d'œuvre de la Renaissance italienne.",
-        image: "/api/placeholder/500/800",
-        location: "Musée du Louvre, Paris"
-      },
-      {
-        id: 4,
-        title: "Les Tournesols",
-        artist: "Vincent van Gogh",
-        year: "1888",
-        description: "Une série de tableaux représentant des tournesols dans un vase, symbole de dévotion et d'admiration.",
-        image: "/api/placeholder/600/600",
-        location: "National Gallery, Londres"
-      },
-      {
-        id: 5,
-        title: "La Persistance de la Mémoire",
-        artist: "Salvador Dalí",
-        year: "1931",
-        description: "Une œuvre surréaliste connue pour ses montres molles, représentant la fluidité du temps dans un paysage onirique.",
-        image: "/api/placeholder/800/500",
-        location: "MoMA, New York"
-      },
-      {
-        id: 6,
-        title: "Guernica",
-        artist: "Pablo Picasso",
-        year: "1937",
-        description: "Une puissante représentation de la guerre civile espagnole, symbole universel des souffrances de la guerre.",
-        image: "/api/placeholder/800/500",
-        location: "Museo Reina Sofía, Madrid"
-      },
-      {
-        id: 7,
-        title: "Le Cri",
-        artist: "Edvard Munch",
-        year: "1893",
-        description: "Une expression de l'angoisse existentielle, devenue une icône de l'art moderne.",
-        image: "/api/placeholder/500/800",
-        location: "Galerie nationale, Oslo"
+        title: "Artwork 3",
+        artist: "77Briglia",
+        year: "2023",
+        description: "Troisième visuel, inspirations street/néon.",
+        image: "https://mir-s3-cdn-cf.behance.net/project_modules/2800/d83245168424297.643a10cb25ee5.jpg",
+        location: "NYC, USA"
       },
     ];
-
-    setArtworks(demoArtworks);
+    setArtworks(brigliaArtworks);
   }, []);
-
-  const handleOpenModal = () => {
-    playClickSound();
-    setIsModalOpen(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const handleCloseModal = () => {
-    playClickSound();
-    setIsModalOpen(false);
-    document.body.style.overflow = 'auto';
-  };
 
   const goToPrevious = () => {
     playClickSound();
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? artworks.length - 1 : prevIndex - 1
     );
   };
 
   const goToNext = () => {
     playClickSound();
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === artworks.length - 1 ? 0 : prevIndex + 1
     );
   };
 
-  // Gestion des touches clavier
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        goToPrevious();
-      } else if (e.key === 'ArrowRight') {
-        goToNext();
-      } else if (e.key === 'Escape' && isModalOpen) {
-        handleCloseModal();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [currentIndex, isModalOpen, artworks.length]);
-
-  // Effet de rotation de l'œuvre centrale
-  const handleMouseMove = (e) => {
-    if (!galleryRef.current) return;
-    
-    const { left, top, width, height } = galleryRef.current.getBoundingClientRect();
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
-    
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-    
-    // Calculer l'angle de rotation basé sur la position de la souris
-    const angleX = (mouseY - centerY) / 40;
-    const angleY = (centerX - mouseX) / 40;
-    
-    if (galleryRef.current) {
-      const artworkElement = galleryRef.current.querySelector('.artwork-display');
-      if (artworkElement) {
-        artworkElement.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
-      }
-    }
-  };
-
-  const resetRotation = () => {
-    if (galleryRef.current) {
-      const artworkElement = galleryRef.current.querySelector('.artwork-display');
-      if (artworkElement) {
-        artworkElement.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-      }
-    }
-  };
-
-  // Si aucune œuvre n'est chargée, afficher un message de chargement
   if (artworks.length === 0) {
     return (
       <div className="gallery-loading">
@@ -171,25 +67,16 @@ const ProjectGallery = ({ isLightMode }) => {
   const currentArtwork = artworks[currentIndex];
 
   return (
-    <div 
-      className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}
-      ref={galleryRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={resetRotation}
-    >
-      <div className="marble-background"></div>
-      
+    <div className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}>      
+      <div className="marble-background" />
+
       <div className="gallery-header">
-        <Parallax offset={-30}>
-          <h1 className="gallery-title">LA GALERIE OLYMPUS</h1>
-        </Parallax>
+        <h1 className="gallery-title">LA GALERIE OLYMPUS</h1>
       </div>
-      
+
       <div className="museum-view">
-        <button className="nav-button prev-button" onClick={goToPrevious}>
-          ‹
-        </button>
-        
+        <button className="nav-button prev-button" onClick={goToPrevious}>‹</button>
+
         <div className="artwork-display-container">
           <div className="artwork-display">
             <AnimatePresence mode="wait">
@@ -200,38 +87,74 @@ const ProjectGallery = ({ isLightMode }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.5 }}
-                onClick={handleOpenModal}
               >
-                <div className="frame-border">
-                  <div className="frame-inner">
-                    <img 
-                      src={currentArtwork.image} 
-                      alt={currentArtwork.title} 
-                      className="artwork-image" 
-                    />
-                  </div>
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '700px',
+                    height: '700px'
+                  }}
+                >
+                  <img 
+                    src={frameSquare}
+                    alt="Cadre doré Olympus"
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      pointerEvents: 'none',
+                      zIndex: 2
+                    }}
+                  />
+
+                  <img
+                    src={currentArtwork.image}
+                    alt={currentArtwork.title}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      zIndex: 1,
+                      WebkitMaskImage: `url(${frameSquareMask})`,
+                      WebkitMaskSize: 'contain',
+                      WebkitMaskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      WebkitMaskMode: 'alpha',
+                      maskImage: `url(${frameSquareMask})`,
+                      maskSize: 'contain',
+                      maskRepeat: 'no-repeat',
+                      maskPosition: 'center',
+                      maskMode: 'alpha'
+                    }}
+                  />
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
-          
+
           <div className="artwork-plaque">
             <div className="plaque-content">
               <h2 className="artwork-title">{currentArtwork.title}</h2>
-              <h3 className="artwork-creator">{currentArtwork.artist}, {currentArtwork.year}</h3>
+              <h3 className="artwork-creator">
+                {currentArtwork.artist}, {currentArtwork.year}
+              </h3>
               <p className="artwork-location">{currentArtwork.location}</p>
-              <button className="info-button" onClick={handleOpenModal}>
+              <button className="info-button">
                 Plus d'informations
               </button>
             </div>
           </div>
         </div>
-        
-        <button className="nav-button next-button" onClick={goToNext}>
-          ›
-        </button>
+
+        <button className="nav-button next-button" onClick={goToNext}>›</button>
       </div>
-      
+
       <div className="gallery-pagination">
         {artworks.map((_, index) => (
           <button
@@ -244,32 +167,6 @@ const ProjectGallery = ({ isLightMode }) => {
           />
         ))}
       </div>
-      
-      {/* Modal pour les détails de l'œuvre */}
-      {isModalOpen && (
-        <div className="artwork-modal-overlay" onClick={handleCloseModal}>
-          <div className="artwork-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={handleCloseModal}>×</button>
-            <div className="modal-frame">
-              <img 
-                src={currentArtwork.image} 
-                alt={currentArtwork.title} 
-                className="modal-artwork-image"
-              />
-            </div>
-            <div className="modal-artwork-info">
-              <h2>{currentArtwork.title}</h2>
-              <h3>{currentArtwork.artist}, {currentArtwork.year}</h3>
-              <p className="modal-artwork-location">{currentArtwork.location}</p>
-              <p className="modal-artwork-description">{currentArtwork.description}</p>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/* Éléments décoratifs inspirés de l'architecture classique */}
-      <div className="decorative-column left-column"></div>
-      <div className="decorative-column right-column"></div>
     </div>
   );
 };

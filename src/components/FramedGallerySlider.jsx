@@ -1,42 +1,19 @@
-/*******************************************************
- * ProjectGallery.jsx - Version Carrousel
- *
- * Règle clé: "Ne jamais rien enlever sans validation."
- * => On garde les lignes existantes.
- * => On applique objectFit=contain, retire la rotation 3D
- * => On met le titre en or direct (#d4af37).
- * => On tente de réduire l'espace sur mobile.
- *******************************************************/
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './ProjectGallery.css';
 import Parallax from './Parallax';
 import { playClickSound } from '../utils/audioManager';
 
-// Frame & Mask
 import frameSquare from '../assets/frames/frame-square.png';
 import frameSquareMask from '../assets/frames/frame-square-mask.png';
+import marbleBackground from '../assets/textures/marble-background.jpg';
 
-/* ProjectGallery - Le slider en carrousel
-   => Artwork mis en avant dans un cadre baroque 
-   => Plaque pour titre, artiste, date, description
-   => Modale pour détails supplémentaires
-*/
 const ProjectGallery = ({ isLightMode }) => {
-  /********************************************
-   * States
-   ********************************************/
   const [currentIndex, setCurrentIndex] = useState(0);
   const [artworks, setArtworks] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Référence (plus de rotation 3D)
   const galleryRef = useRef(null);
 
-  /********************************************
-   * Chargement des œuvres (3 liens Behance)
-   ********************************************/
   useEffect(() => {
     const brigliaArtworks = [
       {
@@ -70,9 +47,6 @@ const ProjectGallery = ({ isLightMode }) => {
     setArtworks(brigliaArtworks);
   }, []);
 
-  /********************************************
-   * Fonctions modale
-   ********************************************/
   const handleOpenModal = () => {
     playClickSound();
     setIsModalOpen(true);
@@ -85,79 +59,65 @@ const ProjectGallery = ({ isLightMode }) => {
     document.body.style.overflow = 'auto';
   };
 
-  /********************************************
-   * Navigation Carrousel
-   ********************************************/
   const goToPrevious = () => {
     playClickSound();
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? artworks.length - 1 : prevIndex - 1
-    );
+    setCurrentIndex((prevIndex) => prevIndex === 0 ? artworks.length - 1 : prevIndex - 1);
   };
 
   const goToNext = () => {
     playClickSound();
-    setCurrentIndex((prevIndex) => 
-      prevIndex === artworks.length - 1 ? 0 : prevIndex + 1
-    );
+    setCurrentIndex((prevIndex) => prevIndex === artworks.length - 1 ? 0 : prevIndex + 1);
   };
 
-  // Contrôles touches clavier
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        goToPrevious();
-      } else if (e.key === 'ArrowRight') {
-        goToNext();
-      } else if (e.key === 'Escape' && isModalOpen) {
-        handleCloseModal();
-      }
+      if (e.key === 'ArrowLeft') goToPrevious();
+      else if (e.key === 'ArrowRight') goToNext();
+      else if (e.key === 'Escape' && isModalOpen) handleCloseModal();
     };
-
     window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentIndex, isModalOpen, artworks.length]);
 
-  /********************************************
-   * Pas de rotation 3D => code commenté
-   ********************************************/
-
   if (artworks.length === 0) {
-    return (
-      <div className="gallery-loading">
-        <h2>Chargement de la galerie...</h2>
-      </div>
-    );
+    return <div className="gallery-loading"><h2>Chargement de la galerie...</h2></div>;
   }
 
-  // Artwork courant
   const currentArtwork = artworks[currentIndex];
 
   return (
     <div 
       className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}
       ref={galleryRef}
+      style={{ background: 'transparent' }}
     >
-      {/* Background marbre => On vérifie le chemin dans "ProjectGallery.css" */}
-      <div className="marble-background" />
+      <div
+        className="marble-background"
+        style={{
+          backgroundImage: `url(${marbleBackground})`,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          zIndex: -10,
+          opacity: 0.8
+        }}
+      />
 
-      {/* Titre => Parallax offset */}
       <div className="gallery-header">
         <Parallax offset={-30}>
-          <h1 className="gallery-title">LA GALERIE OLYMPUS</h1>
+          <h1 className="gallery-title" style={{ color: '#d4af37' }}>LA GALERIE OLYMPUS</h1>
         </Parallax>
       </div>
-      
-      {/* Carrousel principal */}
-      <div className="museum-view">
-        <button className="nav-button prev-button" onClick={goToPrevious}>
-          ‹
-        </button>
-        
-        <div className="artwork-display-container">
-          <div className="artwork-display">
+
+      <div className="museum-view" style={{ background: 'transparent' }}>
+        <button className="nav-button prev-button" onClick={goToPrevious}>‹</button>
+
+        <div className="artwork-display-container" style={{ background: 'transparent' }}>
+          <div className="artwork-display" style={{ background: 'transparent' }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentArtwork.id}
@@ -168,15 +128,7 @@ const ProjectGallery = ({ isLightMode }) => {
                 transition={{ duration: 0.5 }}
                 onClick={handleOpenModal}
               >
-                {/* Container 700×700 => objectFit contain */}
-                <div
-                  style={{
-                    position: 'relative',
-                    width: '700px',
-                    height: '700px'
-                  }}
-                >
-                  {/* Cadre PNG en superposition */}
+                <div style={{ position: 'relative', width: '700px', height: '700px' }}>
                   <img 
                     src={frameSquare}
                     alt="Cadre doré Olympus"
@@ -191,8 +143,6 @@ const ProjectGallery = ({ isLightMode }) => {
                       zIndex: 2
                     }}
                   />
-
-                  {/* Artwork masqué, objectFit=contain pour tout voir */}
                   <img
                     src={currentArtwork.image}
                     alt={currentArtwork.title}
@@ -202,15 +152,13 @@ const ProjectGallery = ({ isLightMode }) => {
                       left: 0,
                       width: '100%',
                       height: '100%',
-                      objectFit: 'contain', // <= On montre TOUTE l'œuvre
+                      objectFit: 'contain',
                       zIndex: 1,
-
                       WebkitMaskImage: `url(${frameSquareMask})`,
                       WebkitMaskSize: 'contain',
                       WebkitMaskRepeat: 'no-repeat',
                       WebkitMaskPosition: 'center',
                       WebkitMaskMode: 'alpha',
-
                       maskImage: `url(${frameSquareMask})`,
                       maskSize: 'contain',
                       maskRepeat: 'no-repeat',
@@ -222,28 +170,20 @@ const ProjectGallery = ({ isLightMode }) => {
               </motion.div>
             </AnimatePresence>
           </div>
-          
-          {/* Plaque d'infos => inchangée */}
+
           <div className="artwork-plaque">
             <div className="plaque-content">
               <h2 className="artwork-title">{currentArtwork.title}</h2>
-              <h3 className="artwork-creator">
-                {currentArtwork.artist}, {currentArtwork.year}
-              </h3>
+              <h3 className="artwork-creator">{currentArtwork.artist}, {currentArtwork.year}</h3>
               <p className="artwork-location">{currentArtwork.location}</p>
-              <button className="info-button" onClick={handleOpenModal}>
-                Plus d'informations
-              </button>
+              <button className="info-button" onClick={handleOpenModal}>Plus d'informations</button>
             </div>
           </div>
         </div>
-        
-        <button className="nav-button next-button" onClick={goToNext}>
-          ›
-        </button>
+
+        <button className="nav-button next-button" onClick={goToNext}>›</button>
       </div>
-      
-      {/* Pagination */}
+
       <div className="gallery-pagination">
         {artworks.map((_, index) => (
           <button
@@ -257,17 +197,12 @@ const ProjectGallery = ({ isLightMode }) => {
         ))}
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="artwork-modal-overlay" onClick={handleCloseModal}>
           <div className="artwork-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={handleCloseModal}>×</button>
             <div className="modal-frame">
-              <img 
-                src={currentArtwork.image} 
-                alt={currentArtwork.title} 
-                className="modal-artwork-image"
-              />
+              <img src={currentArtwork.image} alt={currentArtwork.title} className="modal-artwork-image" />
             </div>
             <div className="modal-artwork-info">
               <h2>{currentArtwork.title}</h2>
@@ -279,7 +214,6 @@ const ProjectGallery = ({ isLightMode }) => {
         </div>
       )}
 
-      {/* Colonnes décoratives => inchangées */}
       <div className="decorative-column left-column"></div>
       <div className="decorative-column right-column"></div>
     </div>
