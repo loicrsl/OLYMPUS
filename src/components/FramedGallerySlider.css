@@ -1,15 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 .museum-gallery {
-  width: 100%;
-  min-height: 100vh;
-  padding: 90px 0 50px;
   position: relative;
+  width: 100%;
+  height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: none;
+  justify-content: center;
 }
 
 .marble-background {
@@ -18,33 +17,31 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
   background: url('../assets/textures/marble-background.jpg') center/cover no-repeat;
+  z-index: -1;
   opacity: 0.8;
+  pointer-events: none;
 }
 
 .gallery-header {
+  margin-bottom: 30px;
   text-align: center;
-  margin-bottom: 40px;
-  width: 100%;
 }
 
 .gallery-title {
   font-family: 'Playfair Display', serif;
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: 2.8rem;
+  color: #bfa335;
   letter-spacing: 2px;
-  color: #d4af37;
-  text-shadow: 0 0 5px rgba(212,175,55,0.5);
+  text-shadow: 0 0 8px rgba(212,175,55,0.4);
 }
 
 .museum-view {
   display: flex;
-  justify-content: center;
   align-items: center;
-  max-width: 1400px;
-  width: 100%;
-  padding: 1rem;
+  justify-content: center;
+  gap: 40px;
+  position: relative;
 }
 
 .artwork-display-container {
@@ -54,63 +51,53 @@
 }
 
 .artwork-display {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.artwork-frame {
   cursor: pointer;
 }
 
 .artwork-plaque {
-  width: 80%;
-  max-width: 600px;
-  margin-top: 30px;
+  width: 70%;
+  max-width: 500px;
+  margin-top: 20px;
   background: linear-gradient(to right, #d4af37, #f5f5f5, #d4af37);
-  padding: 2px;
+  padding: 1px;
   border-radius: 4px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .plaque-content {
-  background-color: #f5f5f5;
-  padding: 20px 25px;
+  background-color: #fefcf8;
+  padding: 16px 20px;
   text-align: center;
   border-radius: 2px;
 }
 
 .dark .plaque-content {
-  background-color: #292929;
-  color: #f5f5f5;
+  background-color: #222;
+  color: #eee;
 }
 
 .artwork-title {
   font-family: 'Playfair Display', serif;
-  font-size: 1.8rem;
-  margin: 0 0 5px;
+  font-size: 1.5rem;
   color: #d4af37;
+  margin-bottom: 5px;
 }
 
 .artwork-creator {
   font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
   font-style: italic;
-  font-weight: 500;
-  font-size: 1.3rem;
-  margin: 0 0 8px;
   color: #333;
 }
 
 .dark .artwork-creator {
-  color: #e0e0e0;
+  color: #ccc;
 }
 
 .artwork-location {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem;
-  margin: 0 0 15px;
+  font-size: 0.95rem;
   color: #666;
+  margin-top: 4px;
 }
 
 .dark .artwork-location {
@@ -118,102 +105,82 @@
 }
 
 .info-button {
-  background: linear-gradient(45deg, #d4af37, #f9f295, #d4af37);
-  color: #333;
-  border: none;
-  padding: 8px 16px;
+  margin-top: 12px;
+  padding: 6px 14px;
   font-family: 'Cormorant Garamond', serif;
   font-size: 1rem;
+  background: linear-gradient(45deg, #d4af37, #f9f295);
+  border: none;
+  color: #333;
+  border-radius: 3px;
   cursor: pointer;
-  border-radius: 4px;
   transition: all 0.3s ease;
 }
 
 .info-button:hover {
-  box-shadow: 0 0 10px rgba(212,175,55,0.6);
+  box-shadow: 0 0 8px rgba(212,175,55,0.6);
   transform: translateY(-2px);
 }
 
 .nav-button {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.25);
-  border: 1px solid rgba(212,175,55,0.5);
+  background: rgba(255,255,255,0.15);
   color: #d4af37;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
+  border: 1px solid rgba(212,175,55,0.4);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
   cursor: pointer;
   transition: all 0.3s ease;
-  backdrop-filter: blur(4px);
-  margin: 0 20px;
 }
 
 .nav-button:hover {
   background: rgba(212,175,55,0.2);
-  box-shadow: 0 0 15px rgba(212,175,55,0.4);
+  box-shadow: 0 0 10px rgba(212,175,55,0.4);
 }
 
 .gallery-pagination {
-  display: flex;
-  justify-content: center;
   margin-top: 20px;
+  display: flex;
+  gap: 8px;
 }
 
 .pagination-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: rgba(212,175,55,0.3);
+  background: rgba(212,175,55,0.3);
   border: none;
-  margin: 0 5px;
-  cursor: pointer;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .pagination-dot.active {
-  background-color: #d4af37;
+  background: #d4af37;
   transform: scale(1.2);
   box-shadow: 0 0 6px rgba(212,175,55,0.4);
 }
 
-.pagination-dot:hover {
-  background-color: rgba(212,175,55,0.7);
-}
-
-.gallery-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
   .gallery-title {
-    font-size: 2.2rem;
-  }
-
-  .artwork-display-container {
-    width: 100%;
-  }
-
-  .artwork-title {
-    font-size: 1.4rem;
-  }
-
-  .artwork-creator {
-    font-size: 1rem;
-  }
-
-  .artwork-location {
-    font-size: 0.9rem;
+    font-size: 1.8rem;
   }
 
   .museum-view {
     flex-direction: column;
-    gap: 1rem;
+    gap: 20px;
+  }
+
+  .artwork-plaque {
+    width: 90%;
+  }
+
+  .nav-button {
+    width: 40px;
+    height: 40px;
   }
 }

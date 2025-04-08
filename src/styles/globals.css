@@ -1,84 +1,84 @@
-/* ========= COULEURS & THEMES ========= */
-body {
+/* ================================
+ * GLOBALS.CSS – Olympus unifié
+ * ================================ */
+
+ * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Bloque tout scroll */
   font-family: 'Cormorant Garamond', serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden;
-  background-color: #fefcf8; /* fallback clair */
-  color: #111;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Fixe la hauteur de la galerie pour éviter le scroll vertical */
+.museum-gallery.fixed-gallery {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Racine React */
+#root {
   position: relative;
   z-index: 0;
 }
 
+/* Mode couleur */
 body.dark-mode {
-  background-color: #000;
-  color: #fff;
+  background-color: transparent !important;
+  color: #f0f0f0;
 }
-
 body.light-mode {
-  background-color: #fefcf8;
+  background-color: transparent !important;
   color: #111;
 }
 
-/* ========= MARBLE BACKGROUND FIX GLOBAL ========= */
-.marble-background {
+/* Navbar */
+.navbar {
+  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -10;
-  width: 100vw;
-  height: 100vh;
-  background: url('../assets/textures/marble-background.jpg') center/cover no-repeat;
-  opacity: 0.8;
-  pointer-events: none;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
+  transition: background 0.3s ease;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-
-/* ========= NAVBAR LIGHT / DARK ========= */
 .light-mode .navbar {
   background-color: rgba(255, 255, 255, 0.7);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
-
 .dark-mode .navbar {
   background-color: rgba(0, 0, 0, 0.6);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .navbar-links a {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-left: 20px;
   text-decoration: none;
-  font-weight: 500;
   transition: color 0.3s ease;
 }
-
 .light-mode .navbar-links a {
   color: #333;
 }
-
-.light-mode .navbar-links a:hover {
-  color: #000;
-  text-shadow: none;
-}
-
 .dark-mode .navbar-links a {
-  color: #eee;
+  color: #f0f0f0;
 }
-
-.dark-mode .navbar-links a:hover {
-  color: #fff;
-  text-shadow: 0 0 6px rgba(212,175,55,0.4);
-}
-
-/* ========= UI TRANSITIONS GÉNÉRALES ========= */
-button, a {
-  transition: all 0.3s ease;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-/* ========= SCROLL SMOOTH ========= */
-html {
-  scroll-behavior: smooth;
+.navbar-links a:hover {
+  color: #d4af37;
+  text-shadow: 0 0 4px rgba(212, 175, 55, 0.4);
 }

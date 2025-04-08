@@ -4,11 +4,13 @@ import './FramedGallerySlider.css';
 import frameSquare from '../assets/frames/frame-square.png';
 import frameSquareMask from '../assets/frames/frame-square-mask.png';
 import { playClickSound } from '../utils/audioManager';
+import ProjectGallery from './ProjectGallery';
 
 const FramedGallerySlider = ({ isLightMode }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [artworks, setArtworks] = useState([]);
   const [loadedImages, setLoadedImages] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const brigliaArtworks = [
@@ -69,16 +71,24 @@ const FramedGallerySlider = ({ isLightMode }) => {
     );
   };
 
-  if (artworks.length === 0) {
-    return (
-      <div className="gallery-loading">
-        <h2>Chargement de la galerie...</h2>
-      </div>
-    );
-  }
+  const handleOpenModal = () => {
+    playClickSound();
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handleCloseModal = () => {
+    playClickSound();
+    setIsModalOpen(false);
+    document.body.style.overflow = 'auto';
+  };
 
   const currentArtwork = artworks[currentIndex];
-  const isLoaded = loadedImages.includes(currentArtwork.id);
+  const isLoaded = loadedImages.includes(currentArtwork?.id);
+
+  if (!artworks.length || !currentArtwork) {
+    return <div className="gallery-loading"><h2>Chargement de la galerie Olympus...</h2></div>;
+  }
 
   return (
     <div className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}>
@@ -92,7 +102,7 @@ const FramedGallerySlider = ({ isLightMode }) => {
         <button className="nav-button prev-button" onClick={goToPrevious}>‹</button>
 
         <div className="artwork-display-container">
-          <div className="artwork-display">
+          <div className="artwork-display" onClick={handleOpenModal}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentArtwork.id}
@@ -125,7 +135,6 @@ const FramedGallerySlider = ({ isLightMode }) => {
                       zIndex: 2
                     }}
                   />
-
                   <img
                     src={currentArtwork.image}
                     alt={currentArtwork.title}
@@ -158,13 +167,9 @@ const FramedGallerySlider = ({ isLightMode }) => {
           <div className="artwork-plaque">
             <div className="plaque-content">
               <h2 className="artwork-title">{currentArtwork.title}</h2>
-              <h3 className="artwork-creator">
-                {currentArtwork.artist}, {currentArtwork.year}
-              </h3>
+              <h3 className="artwork-creator">{currentArtwork.artist}, {currentArtwork.year}</h3>
               <p className="artwork-location">{currentArtwork.location}</p>
-              <button className="info-button">
-                Plus d'informations
-              </button>
+              <button className="info-button" onClick={handleOpenModal}>Plus d'informations</button>
             </div>
           </div>
         </div>
@@ -184,6 +189,10 @@ const FramedGallerySlider = ({ isLightMode }) => {
           />
         ))}
       </div>
+
+      {isModalOpen && (
+        <ProjectGallery artwork={currentArtwork} onClose={handleCloseModal} />
+      )}
     </div>
   );
 };

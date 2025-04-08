@@ -1,0 +1,56 @@
+.zoom-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    cursor: zoom-out;
+    padding: 2rem;
+  }
+  
+  .frame {
+    max-width: 90vw;
+    max-height: 90vh;
+    position: relative;
+    border: 3px solid #d4af37;
+    background-color: #fefcf8;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(212,175,55,0.4);
+    overflow: hidden;
+  }
+  
+  .frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .plaque {
+    padding: 1.5rem;
+    background: #fff;
+    color: #000;
+    font-family: 'Cormorant Garamond', serif;
+    border-top: 1px solid #d4af37;
+    text-align: center;
+  }
+  
+  .plaque h2 {
+    font-size: 1.8rem;
+    color: #d4af37;
+    margin-bottom: 0.3rem;
+  }
+  
+  .plaque h3 {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #444;
+    margin-bottom: 0.3rem;
+  }
+  
+  .plaque p {
+    font-size: 1rem;
+    color: #666;
+  }
+  

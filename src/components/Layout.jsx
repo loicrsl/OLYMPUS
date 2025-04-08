@@ -1,4 +1,4 @@
-// Layout.jsx mis à jour
+// Layout.jsx corrigé
 import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
@@ -16,7 +16,7 @@ const Layout = () => {
   return (
     <>
       <Navbar isLightMode={isLightMode} setIsLightMode={setIsLightMode} />
-      <main style={{ minHeight: '100vh', backgroundColor: isLightMode ? '#ebebed' : '#000' }}>
+      <main style={{ height: '100vh', overflow: 'hidden' }}>
         <Outlet context={{ isLightMode }} />
       </main>
       <AudioControls />

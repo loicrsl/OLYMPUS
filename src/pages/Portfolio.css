@@ -1,6 +1,6 @@
 /* Portfolio.css */
 .portfolio-page {
-  padding-top: 70px; /* Pour compenser la navbar fixe */
+  padding-top: 0; /* Supprimé */
   min-height: 100vh;
   width: 100%;
   overflow-x: hidden;
