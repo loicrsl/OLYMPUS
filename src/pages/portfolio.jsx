@@ -1,15 +1,11 @@
-// Portfolio.jsx mis à jour
+// Portfolio.jsx
 import React from 'react';
-import { useOutletContext } from 'react-router-dom';
-import ProjectGallery from '../components/ProjectGallery';
-import './Portfolio.css';
+import FramedGallerySlider from '../components/FramedGallerySlider';
 
 const Portfolio = () => {
-  const { isLightMode } = useOutletContext() || { isLightMode: true };
-  
   return (
     <div className="portfolio-page">
-      <ProjectGallery isLightMode={isLightMode} />
+      <FramedGallerySlider />
     </div>
   );
 };
