@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import './ProjectGallery.css';
+import './FramedGallerySlider.css';
 import frameSquare from '../assets/frames/frame-square.png';
 import frameSquareMask from '../assets/frames/frame-square-mask.png';
 import { playClickSound } from '../utils/audioManager';
 
-const ProjectGallery = ({ isLightMode }) => {
+const FramedGallerySlider = ({ isLightMode }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [artworks, setArtworks] = useState([]);
   const [loadedImages, setLoadedImages] = useState([]);
@@ -81,7 +81,7 @@ const ProjectGallery = ({ isLightMode }) => {
   const isLoaded = loadedImages.includes(currentArtwork.id);
 
   return (
-    <div className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}>      
+    <div className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}>
       <div className="marble-background" />
 
       <div className="gallery-header">
@@ -188,4 +188,4 @@ const ProjectGallery = ({ isLightMode }) => {
   );
 };
 
-export default ProjectGallery;
+export default FramedGallerySlider;

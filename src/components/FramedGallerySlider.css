@@ -3,13 +3,13 @@
 .museum-gallery {
   width: 100%;
   min-height: 100vh;
-  padding: 90px 0 60px;
+  padding: 90px 0 50px;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: transparent;
+  background: none;
 }
 
 .marble-background {
@@ -18,74 +18,81 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('../assets/textures/marble-background.jpg') center/cover no-repeat;
   z-index: -1;
-  opacity: 0.7;
-  pointer-events: none;
+  background: url('../assets/textures/marble-background.jpg') center/cover no-repeat;
+  opacity: 0.8;
 }
 
-/* Header */
 .gallery-header {
   text-align: center;
   margin-bottom: 40px;
-  z-index: 1;
+  width: 100%;
 }
+
 .gallery-title {
   font-family: 'Playfair Display', serif;
   font-size: 3rem;
   font-weight: 700;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   color: #d4af37;
-  text-shadow: 0 0 6px rgba(212,175,55,0.3);
+  text-shadow: 0 0 5px rgba(212,175,55,0.5);
 }
 
-/* Cadre + œuvre */
 .museum-view {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: nowrap;
-  width: 100%;
   max-width: 1400px;
-  min-height: 600px;
-  position: relative;
+  width: 100%;
   padding: 1rem;
-  z-index: 1;
 }
+
 .artwork-display-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .artwork-display {
-  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-/* Plaque */
+.artwork-frame {
+  cursor: pointer;
+}
+
 .artwork-plaque {
   width: 80%;
   max-width: 600px;
+  margin-top: 30px;
   background: linear-gradient(to right, #d4af37, #f5f5f5, #d4af37);
   padding: 2px;
   border-radius: 4px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
+
 .plaque-content {
   background-color: #f5f5f5;
   padding: 20px 25px;
   text-align: center;
   border-radius: 2px;
 }
+
 .dark .plaque-content {
   background-color: #292929;
   color: #f5f5f5;
 }
+
 .artwork-title {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
   margin: 0 0 5px;
   color: #d4af37;
 }
+
 .artwork-creator {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
@@ -94,20 +101,22 @@
   margin: 0 0 8px;
   color: #333;
 }
+
 .dark .artwork-creator {
   color: #e0e0e0;
 }
+
 .artwork-location {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1rem;
   margin: 0 0 15px;
   color: #666;
 }
+
 .dark .artwork-location {
   color: #bbb;
 }
 
-/* Bouton */
 .info-button {
   background: linear-gradient(45deg, #d4af37, #f9f295, #d4af37);
   color: #333;
@@ -119,12 +128,12 @@
   border-radius: 4px;
   transition: all 0.3s ease;
 }
+
 .info-button:hover {
   box-shadow: 0 0 10px rgba(212,175,55,0.6);
   transform: translateY(-2px);
 }
 
-/* Flèches */
 .nav-button {
   width: 50px;
   height: 50px;
@@ -141,17 +150,18 @@
   backdrop-filter: blur(4px);
   margin: 0 20px;
 }
+
 .nav-button:hover {
   background: rgba(212,175,55,0.2);
   box-shadow: 0 0 15px rgba(212,175,55,0.4);
 }
 
-/* Pagination */
 .gallery-pagination {
   display: flex;
   justify-content: center;
   margin-top: 20px;
 }
+
 .pagination-dot {
   width: 10px;
   height: 10px;
@@ -162,35 +172,48 @@
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
 .pagination-dot.active {
   background-color: #d4af37;
   transform: scale(1.2);
   box-shadow: 0 0 6px rgba(212,175,55,0.4);
 }
+
 .pagination-dot:hover {
   background-color: rgba(212,175,55,0.7);
 }
 
-/* Mobile */
-@media (max-width: 992px) {
-  .museum-view {
-    flex-direction: column;
-    height: auto;
-    padding: 0 1rem;
-  }
-  .nav-button {
-    position: static;
-    margin: 0.5rem;
-  }
+.gallery-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
-@media (max-width: 576px) {
+
+/* Responsive */
+@media (max-width: 768px) {
   .gallery-title {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
   }
+
+  .artwork-display-container {
+    width: 100%;
+  }
+
   .artwork-title {
     font-size: 1.4rem;
   }
+
   .artwork-creator {
-    font-size: 1.1rem;
+    font-size: 1rem;
+  }
+
+  .artwork-location {
+    font-size: 0.9rem;
+  }
+
+  .museum-view {
+    flex-direction: column;
+    gap: 1rem;
   }
 }
