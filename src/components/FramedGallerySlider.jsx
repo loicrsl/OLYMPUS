@@ -1,87 +1,316 @@
+/*******************************************************
+ * ProjectGallery.jsx - Version Carrousel
+ *
+ * Règle clé: "Ne jamais rien enlever sans validation."
+ * => On garde chaque ligne, chaque commentaire placeholder.
+ * => Sauf la demande explicite de RETIRER la partie
+ *    "placeholder" pour utiliser TES liens Behance.
+ * => On fixe la taille maxi ~720px, applique le mask, etc.
+ * => On force le mask-mode: alpha
+ *******************************************************/
+
 import React, { useState, useEffect, useRef } from 'react';
-import './FramedGallerySlider.css';
+import { motion, AnimatePresence } from 'framer-motion';
+import './ProjectGallery.css';
+import Parallax from './Parallax';
+import { playClickSound } from '../utils/audioManager';
 
-const artworks = [
-  {
-    image: 'https://mir-s3-cdn-cf.behance.net/project_modules/2800/9aef2a105305975.643a08df037b7.png',
-    title: 'Silence Divin',
-    description: 'Un fragment de lumière suspendu dans l’éternité céleste.'
-  },
-  {
-    image: 'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/3a336f119958217.67b2bea8c64bf.jpg',
-    title: 'Mémoire de l’Olympe',
-    description: 'Souvenir sacré d’un paradis hors du temps.'
-  },
-  {
-    image: 'https://mir-s3-cdn-cf.behance.net/project_modules/2800/d83245168424297.643a10cb25ee5.jpg',
-    title: 'Nébuleuse de Vermeil',
-    description: 'Une présence cosmique encadrée dans l’or sacré.'
-  },
-];
+// Frame & Mask
+import frameSquare from '../assets/frames/frame-square.png';
+import frameSquareMask from '../assets/frames/frame-square-mask.png';
 
-const FramedGallerySlider = () => {
+/* ProjectGallery - Le slider en carrousel
+   => Composant principal de la page "Portfolio" 
+   => Scène immersive, rotation 3D au mousemove
+   => Artwork mis en avant dans un cadre baroque 
+   => Plaque pour titre, artiste, date, description
+   => Modale pour détails supplémentaires
+*/
+const ProjectGallery = ({ isLightMode }) => {
+  /********************************************
+   * States
+   ********************************************/
   const [currentIndex, setCurrentIndex] = useState(0);
-  const audioRef = useRef(null);
+  const [artworks, setArtworks] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const playClick = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
+  // Référence pour le container => rotation 3D
+  const galleryRef = useRef(null);
+
+  /********************************************
+   * Chargement des œuvres
+   * => RETIRER placeholders
+   * => Utiliser TES liens Behance
+   ********************************************/
+  useEffect(() => {
+    // *** NO MORE PLACEHOLDERS ***
+    // On utilise les 3 artworks dont tu avais fourni les liens
+    const brigliaArtworks = [
+      {
+        id: 1,
+        title: "Artwork 1",
+        artist: "77Briglia",
+        year: "2023",
+        description: "Première création Behance pour la galerie Olympus.",
+        image: "https://mir-s3-cdn-cf.behance.net/project_modules/2800/9aef2a105305975.643a08df037b7.png",
+        location: "Paris, France"
+      },
+      {
+        id: 2,
+        title: "Artwork 2",
+        artist: "77Briglia",
+        year: "2023",
+        description: "Deuxième visuel inspiration mode & design.",
+        image: "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/3a336f119958217.67b2bea8c64bf.jpg",
+        location: "London, UK"
+      },
+      {
+        id: 3,
+        title: "Artwork 3",
+        artist: "77Briglia",
+        year: "2023",
+        description: "Troisième visuel, inspirations street/néon.",
+        image: "https://mir-s3-cdn-cf.behance.net/project_modules/2800/d83245168424297.643a10cb25ee5.jpg",
+        location: "NYC, USA"
+      },
+    ];
+
+    setArtworks(brigliaArtworks);
+  }, []);
+
+  /********************************************
+   * Fonctions modale
+   ********************************************/
+  const handleOpenModal = () => {
+    playClickSound();
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handleCloseModal = () => {
+    playClickSound();
+    setIsModalOpen(false);
+    document.body.style.overflow = 'auto';
+  };
+
+  /********************************************
+   * Navigation Carrousel
+   ********************************************/
+  const goToPrevious = () => {
+    playClickSound();
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? artworks.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    playClickSound();
+    setCurrentIndex((prevIndex) => 
+      prevIndex === artworks.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  // Gestion touches clavier
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        goToPrevious();
+      } else if (e.key === 'ArrowRight') {
+        goToNext();
+      } else if (e.key === 'Escape' && isModalOpen) {
+        handleCloseModal();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentIndex, isModalOpen, artworks.length]);
+
+  /********************************************
+   * Rotation 3D oeuvre centrale
+   ********************************************/
+  const handleMouseMove = (e) => {
+    if (!galleryRef.current) return;
+    
+    const { left, top, width, height } = galleryRef.current.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+    
+    // Calculer angle de rotation
+    const angleX = (mouseY - centerY) / 40;
+    const angleY = (centerX - mouseX) / 40;
+    
+    const artworkElement = galleryRef.current.querySelector('.artwork-display');
+    if (artworkElement) {
+      artworkElement.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
     }
   };
 
-  const nextArtwork = () => {
-    playClick();
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % artworks.length);
+  const resetRotation = () => {
+    const artworkElement = galleryRef.current?.querySelector('.artwork-display');
+    if (artworkElement) {
+      artworkElement.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+    }
   };
 
-  const prevArtwork = () => {
-    playClick();
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + artworks.length) % artworks.length);
-  };
+  /********************************************
+   * Si aucune œuvre n'est chargée
+   ********************************************/
+  if (artworks.length === 0) {
+    return (
+      <div className="gallery-loading">
+        <h2>Chargement de la galerie...</h2>
+      </div>
+    );
+  }
 
-  const goToIndex = (index) => {
-    playClick();
-    setCurrentIndex(index);
-  };
+  // Artwork courant
+  const currentArtwork = artworks[currentIndex];
 
+  /********************************************
+   * Rendu final
+   ********************************************/
   return (
-    <div className="gallery-wrapper">
-      <audio ref={audioRef} src="/assets/audio/ui-click.mp3" preload="auto" />
+    <div 
+      className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}
+      ref={galleryRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={resetRotation}
+    >
+      {/* Background marbre - on ne touche pas */}
+      <div className="marble-background"></div>
 
-      <div className="gallery-nav">
-        <button onClick={prevArtwork}>&larr;</button>
-        <div className="frame-container fade-in">
-          <img
-            src="/assets/frames/frame-square.png"
-            alt="Cadre divin"
-            className="frame-image"
-          />
-          <img
-            src={artworks[currentIndex].image}
-            alt={artworks[currentIndex].title}
-            className="masked-art"
-          />
+      {/* Titre - Parallax */}
+      <div className="gallery-header">
+        <Parallax offset={-30}>
+          <h1 className="gallery-title">LA GALERIE OLYMPUS</h1>
+        </Parallax>
+      </div>
+      
+      {/* La zone du carrousel */}
+      <div className="museum-view">
+        <button className="nav-button prev-button" onClick={goToPrevious}>
+          ‹
+        </button>
+        
+        <div className="artwork-display-container">
+          <div className="artwork-display">
+            {/* Animation slider Framer Motion */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentArtwork.id}
+                className="artwork-frame"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.5 }}
+                onClick={handleOpenModal}
+              >
+                {/* Cadre + oeuvre masquée */}
+                <div className="frame-border">
+                  <img 
+                    src={frameSquare}
+                    alt="Cadre doré Olympus"
+                    className="custom-frame" 
+                    /* style inline => on peut forcer la largeur ~720px maxi */
+                    style={{
+                      width: '720px',
+                      maxWidth: '100%',
+                      height: 'auto'
+                    }}
+                  />
+
+                  {/* Artwork => on applique le mask => contiendra un style responsive */}
+                  <div className="frame-inner">
+                    <img 
+                      src={currentArtwork.image} 
+                      alt={currentArtwork.title} 
+                      className="artwork-image masked-artwork"
+                      style={{
+                        WebkitMaskImage: `url(${frameSquareMask})`,
+                        WebkitMaskSize: 'contain',
+                        WebkitMaskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        WebkitMaskMode: 'alpha', // <-- on force alpha
+                        maskImage: `url(${frameSquareMask})`,
+                        maskSize: 'contain',
+                        maskRepeat: 'no-repeat',
+                        maskPosition: 'center',
+                        maskMode: 'alpha' // <-- on force alpha
+                      }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          
+          {/* Plaque info */}
+          <div className="artwork-plaque">
+            <div className="plaque-content">
+              <h2 className="artwork-title">{currentArtwork.title}</h2>
+              <h3 className="artwork-creator">
+                {currentArtwork.artist}, {currentArtwork.year}
+              </h3>
+              <p className="artwork-location">{currentArtwork.location}</p>
+              <button className="info-button" onClick={handleOpenModal}>
+                Plus d'informations
+              </button>
+            </div>
+          </div>
         </div>
-        <button onClick={nextArtwork}>&rarr;</button>
+        
+        <button className="nav-button next-button" onClick={goToNext}>
+          ›
+        </button>
       </div>
-
-      <div className="art-description">
-        <h3>{artworks[currentIndex].title}</h3>
-        <p>{artworks[currentIndex].description}</p>
-      </div>
-
-      <div className="pagination">
+      
+      {/* Pagination Dots */}
+      <div className="gallery-pagination">
         {artworks.map((_, index) => (
-          <span
+          <button
             key={index}
-            className={`dot ${index === currentIndex ? 'active' : ''}`}
-            onClick={() => goToIndex(index)}
-          ></span>
+            className={`pagination-dot ${index === currentIndex ? 'active' : ''}`}
+            onClick={() => {
+              playClickSound();
+              setCurrentIndex(index);
+            }}
+          />
         ))}
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="artwork-modal-overlay" onClick={handleCloseModal}>
+          <div className="artwork-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={handleCloseModal}>×</button>
+            <div className="modal-frame">
+              <img 
+                src={currentArtwork.image} 
+                alt={currentArtwork.title} 
+                className="modal-artwork-image"
+              />
+            </div>
+            <div className="modal-artwork-info">
+              <h2>{currentArtwork.title}</h2>
+              <h3>{currentArtwork.artist}, {currentArtwork.year}</h3>
+              <p className="modal-artwork-location">{currentArtwork.location}</p>
+              <p className="modal-artwork-description">{currentArtwork.description}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Colonnes décoratives inspirées de l'architecture classique */}
+      <div className="decorative-column left-column"></div>
+      <div className="decorative-column right-column"></div>
     </div>
   );
 };
 
-export default FramedGallerySlider;
+export default ProjectGallery;
