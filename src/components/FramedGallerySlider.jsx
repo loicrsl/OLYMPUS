@@ -2,11 +2,13 @@
  * ProjectGallery.jsx - Version Carrousel
  *
  * Règle clé: "Ne jamais rien enlever sans validation."
- * => On garde chaque ligne, chaque commentaire placeholder.
- * => Sauf la demande explicite de RETIRER la partie
- *    "placeholder" pour utiliser TES liens Behance.
- * => On fixe la taille maxi ~720px, applique le mask, etc.
- * => On force le mask-mode: alpha
+ * => On garde toutes les lignes et commentaires.
+ * => On enlève explicitement la rotation 3D (cadre
+ *    parallax) avec permission de Loïc.
+ * => On réduit le conteneur à 700×700.
+ * => On fonce la couleur dorée du titre.
+ * => On garde la plaque intacte.
+ * => On améliore les media queries dans le CSS.
  *******************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -21,7 +23,7 @@ import frameSquareMask from '../assets/frames/frame-square-mask.png';
 
 /* ProjectGallery - Le slider en carrousel
    => Composant principal de la page "Portfolio" 
-   => Scène immersive, rotation 3D au mousemove
+   => Scène immersive ~ (Parallax sur cadre) => plus maintenant, retiré.
    => Artwork mis en avant dans un cadre baroque 
    => Plaque pour titre, artiste, date, description
    => Modale pour détails supplémentaires
@@ -35,16 +37,14 @@ const ProjectGallery = ({ isLightMode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Référence pour le container => rotation 3D
+  // (We keep this but won't use it for rotation)
   const galleryRef = useRef(null);
 
   /********************************************
    * Chargement des œuvres
-   * => RETIRER placeholders
-   * => Utiliser TES liens Behance
+   * => Liens Behance (version validée)
    ********************************************/
   useEffect(() => {
-    // *** NO MORE PLACEHOLDERS ***
-    // On utilise les 3 artworks dont tu avais fourni les liens
     const brigliaArtworks = [
       {
         id: 1,
@@ -130,33 +130,17 @@ const ProjectGallery = ({ isLightMode }) => {
 
   /********************************************
    * Rotation 3D oeuvre centrale
+   * => (Removed with permission)
    ********************************************/
-  const handleMouseMove = (e) => {
-    if (!galleryRef.current) return;
-    
-    const { left, top, width, height } = galleryRef.current.getBoundingClientRect();
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
-    
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-    
-    // Calculer angle de rotation
-    const angleX = (mouseY - centerY) / 40;
-    const angleY = (centerX - mouseX) / 40;
-    
-    const artworkElement = galleryRef.current.querySelector('.artwork-display');
-    if (artworkElement) {
-      artworkElement.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
-    }
-  };
+  /*
+   const handleMouseMove = (e) => {
+     // old code removed
+   };
 
-  const resetRotation = () => {
-    const artworkElement = galleryRef.current?.querySelector('.artwork-display');
-    if (artworkElement) {
-      artworkElement.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-    }
-  };
+   const resetRotation = () => {
+     // old code removed
+   };
+  */
 
   /********************************************
    * Si aucune œuvre n'est chargée
@@ -179,13 +163,13 @@ const ProjectGallery = ({ isLightMode }) => {
     <div 
       className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}
       ref={galleryRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={resetRotation}
+      // onMouseMove={handleMouseMove} // removed
+      // onMouseLeave={resetRotation}  // removed
     >
-      {/* Background marbre - on ne touche pas */}
+      {/* Background marbre */}
       <div className="marble-background"></div>
 
-      {/* Titre - Parallax */}
+      {/* Titre - Parallax sur le texte, pas sur le cadre */}
       <div className="gallery-header">
         <Parallax offset={-30}>
           <h1 className="gallery-title">LA GALERIE OLYMPUS</h1>
@@ -211,46 +195,65 @@ const ProjectGallery = ({ isLightMode }) => {
                 transition={{ duration: 0.5 }}
                 onClick={handleOpenModal}
               >
-                {/* Cadre + oeuvre masquée */}
-                <div className="frame-border">
+                {/*
+                  OPTION C revisited => 700×700 container
+                */}
+                <div
+                  className="frame-container-700" 
+                  style={{
+                    position: 'relative',
+                    width: '700px',
+                    height: '700px'
+                  }}
+                >
+                  {/* Cadre PNG en superposition */}
                   <img 
                     src={frameSquare}
                     alt="Cadre doré Olympus"
-                    className="custom-frame" 
-                    /* style inline => on peut forcer la largeur ~720px maxi */
                     style={{
-                      width: '720px',
-                      maxWidth: '100%',
-                      height: 'auto'
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      pointerEvents: 'none',
+                      zIndex: 2
                     }}
                   />
 
-                  {/* Artwork => on applique le mask => contiendra un style responsive */}
-                  <div className="frame-inner">
-                    <img 
-                      src={currentArtwork.image} 
-                      alt={currentArtwork.title} 
-                      className="artwork-image masked-artwork"
-                      style={{
-                        WebkitMaskImage: `url(${frameSquareMask})`,
-                        WebkitMaskSize: 'contain',
-                        WebkitMaskRepeat: 'no-repeat',
-                        WebkitMaskPosition: 'center',
-                        WebkitMaskMode: 'alpha', // <-- on force alpha
-                        maskImage: `url(${frameSquareMask})`,
-                        maskSize: 'contain',
-                        maskRepeat: 'no-repeat',
-                        maskPosition: 'center',
-                        maskMode: 'alpha' // <-- on force alpha
-                      }}
-                    />
-                  </div>
+                  {/* Artwork masqué par frameSquareMask */}
+                  <img
+                    src={currentArtwork.image}
+                    alt={currentArtwork.title}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      zIndex: 1,
+
+                      WebkitMaskImage: `url(${frameSquareMask})`,
+                      WebkitMaskSize: 'contain',
+                      WebkitMaskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      WebkitMaskMode: 'alpha',
+
+                      maskImage: `url(${frameSquareMask})`,
+                      maskSize: 'contain',
+                      maskRepeat: 'no-repeat',
+                      maskPosition: 'center',
+                      maskMode: 'alpha'
+                    }}
+                  />
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
           
-          {/* Plaque info */}
+          {/* Plaque info (non modifiée) */}
           <div className="artwork-plaque">
             <div className="plaque-content">
               <h2 className="artwork-title">{currentArtwork.title}</h2>
@@ -299,7 +302,7 @@ const ProjectGallery = ({ isLightMode }) => {
             <div className="modal-artwork-info">
               <h2>{currentArtwork.title}</h2>
               <h3>{currentArtwork.artist}, {currentArtwork.year}</h3>
-              <p className="modal-artwork-location">{currentArtwork.location}</p>
+              <p className="artwork-location">{currentArtwork.location}</p>
               <p className="modal-artwork-description">{currentArtwork.description}</p>
             </div>
           </div>
