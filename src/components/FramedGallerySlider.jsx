@@ -1,18 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './ProjectGallery.css';
-import Parallax from './Parallax';
-import { playClickSound } from '../utils/audioManager';
-
 import frameSquare from '../assets/frames/frame-square.png';
 import frameSquareMask from '../assets/frames/frame-square-mask.png';
-import marbleBackground from '../assets/textures/marble-background.jpg';
+import { playClickSound } from '../utils/audioManager';
 
 const ProjectGallery = ({ isLightMode }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [artworks, setArtworks] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const galleryRef = useRef(null);
+  const [loadedImages, setLoadedImages] = useState([]);
 
   useEffect(() => {
     const brigliaArtworks = [
@@ -45,90 +41,76 @@ const ProjectGallery = ({ isLightMode }) => {
       },
     ];
     setArtworks(brigliaArtworks);
+    preloadImages(brigliaArtworks);
   }, []);
 
-  const handleOpenModal = () => {
-    playClickSound();
-    setIsModalOpen(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const handleCloseModal = () => {
-    playClickSound();
-    setIsModalOpen(false);
-    document.body.style.overflow = 'auto';
+  const preloadImages = (items) => {
+    const imagePromises = items.map(item => {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.src = item.image;
+        img.onload = resolve;
+      });
+    });
+    Promise.all(imagePromises).then(() => setLoadedImages(items.map(i => i.id)));
   };
 
   const goToPrevious = () => {
     playClickSound();
-    setCurrentIndex((prevIndex) => prevIndex === 0 ? artworks.length - 1 : prevIndex - 1);
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? artworks.length - 1 : prevIndex - 1
+    );
   };
 
   const goToNext = () => {
     playClickSound();
-    setCurrentIndex((prevIndex) => prevIndex === artworks.length - 1 ? 0 : prevIndex + 1);
+    setCurrentIndex((prevIndex) =>
+      prevIndex === artworks.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') goToPrevious();
-      else if (e.key === 'ArrowRight') goToNext();
-      else if (e.key === 'Escape' && isModalOpen) handleCloseModal();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, isModalOpen, artworks.length]);
-
   if (artworks.length === 0) {
-    return <div className="gallery-loading"><h2>Chargement de la galerie...</h2></div>;
+    return (
+      <div className="gallery-loading">
+        <h2>Chargement de la galerie...</h2>
+      </div>
+    );
   }
 
   const currentArtwork = artworks[currentIndex];
+  const isLoaded = loadedImages.includes(currentArtwork.id);
 
   return (
-    <div 
-      className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}
-      ref={galleryRef}
-      style={{ background: 'transparent' }}
-    >
-      <div
-        className="marble-background"
-        style={{
-          backgroundImage: `url(${marbleBackground})`,
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          zIndex: -10,
-          opacity: 0.8
-        }}
-      />
+    <div className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}>      
+      <div className="marble-background" />
 
       <div className="gallery-header">
-        <Parallax offset={-30}>
-          <h1 className="gallery-title" style={{ color: '#d4af37' }}>LA GALERIE OLYMPUS</h1>
-        </Parallax>
+        <h1 className="gallery-title">LA GALERIE OLYMPUS</h1>
       </div>
 
-      <div className="museum-view" style={{ background: 'transparent' }}>
+      <div className="museum-view">
         <button className="nav-button prev-button" onClick={goToPrevious}>‹</button>
 
-        <div className="artwork-display-container" style={{ background: 'transparent' }}>
-          <div className="artwork-display" style={{ background: 'transparent' }}>
+        <div className="artwork-display-container">
+          <div className="artwork-display">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentArtwork.id}
                 className="artwork-frame"
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.5 }}
-                onClick={handleOpenModal}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
               >
-                <div style={{ position: 'relative', width: '700px', height: '700px' }}>
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '700px',
+                    height: '700px',
+                    filter: isLoaded ? 'drop-shadow(0 0 20px rgba(212,175,55,0.2))' : 'blur(5px)',
+                    transition: 'filter 0.5s ease'
+                  }}
+                >
                   <img 
                     src={frameSquare}
                     alt="Cadre doré Olympus"
@@ -143,9 +125,11 @@ const ProjectGallery = ({ isLightMode }) => {
                       zIndex: 2
                     }}
                   />
+
                   <img
                     src={currentArtwork.image}
                     alt={currentArtwork.title}
+                    loading="lazy"
                     style={{
                       position: 'absolute',
                       top: 0,
@@ -174,9 +158,13 @@ const ProjectGallery = ({ isLightMode }) => {
           <div className="artwork-plaque">
             <div className="plaque-content">
               <h2 className="artwork-title">{currentArtwork.title}</h2>
-              <h3 className="artwork-creator">{currentArtwork.artist}, {currentArtwork.year}</h3>
+              <h3 className="artwork-creator">
+                {currentArtwork.artist}, {currentArtwork.year}
+              </h3>
               <p className="artwork-location">{currentArtwork.location}</p>
-              <button className="info-button" onClick={handleOpenModal}>Plus d'informations</button>
+              <button className="info-button">
+                Plus d'informations
+              </button>
             </div>
           </div>
         </div>
@@ -196,26 +184,6 @@ const ProjectGallery = ({ isLightMode }) => {
           />
         ))}
       </div>
-
-      {isModalOpen && (
-        <div className="artwork-modal-overlay" onClick={handleCloseModal}>
-          <div className="artwork-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={handleCloseModal}>×</button>
-            <div className="modal-frame">
-              <img src={currentArtwork.image} alt={currentArtwork.title} className="modal-artwork-image" />
-            </div>
-            <div className="modal-artwork-info">
-              <h2>{currentArtwork.title}</h2>
-              <h3>{currentArtwork.artist}, {currentArtwork.year}</h3>
-              <p className="artwork-location">{currentArtwork.location}</p>
-              <p className="modal-artwork-description">{currentArtwork.description}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="decorative-column left-column"></div>
-      <div className="decorative-column right-column"></div>
     </div>
   );
 };
