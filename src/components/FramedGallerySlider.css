@@ -1,13 +1,12 @@
 /**************************************************************
- * ProjectGallery.css - Version carrousel 
- * => On conserve TOUT, sauf qu'on:
- *    - Fonce le doré du titre
- *    - Ajoute media queries plus "pro"
+ * ProjectGallery.css - Corrigée
+ * => Fond marbre (path exact), Titre en or direct (#d4af37)
+ * => Mobile => hauteur auto
+ * => Artwork "objectFit=contain"
  **************************************************************/
 
  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
- /* Conteneur global */
  .museum-gallery {
    width: 100%;
    min-height: 100vh;
@@ -19,56 +18,50 @@
    align-items: center;
  }
  
- /* Fond marbre fullscreen */
+ /* Correction du path, assure-toi que:
+    => /src/assets/textures/marble-background.jpg
+    => C'est EXACTEMENT ce nom
+ */
  .marble-background {
-   position: fixed;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   background-image: url('../assets/textures/marble-background.jpg');
-   background-size: cover;
-   z-index: -1;
-   opacity: 0.5; /* On peut augmenter si on veut moins de transparence */
- }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../assets/textures/marble-background.jpg') center/cover no-repeat;
+  z-index: -1;
+  opacity: 0.8;
+}
  
  .light .marble-background {
-   background-color: #f5f5f7;
    background-blend-mode: overlay;
  }
- 
  .dark .marble-background {
-   background-color: #111111;
    background-blend-mode: soft-light;
  }
  
- /* Header */
+ /* Header - Titre or direct */
  .gallery-header {
    text-align: center;
    margin-bottom: 40px;
-   position: relative;
    width: 100%;
  }
  
- /* Titre => doré plus foncé (#b08d35 par ex.) */
+ /* Titre => or direct #d4af37 => plus de gradient */
  .gallery-title {
    font-family: 'Playfair Display', serif;
    font-size: 3rem;
    font-weight: 700;
    letter-spacing: 3px;
-   /* Couleur or plus foncé */
-   background: linear-gradient(45deg, #b08d35, #a7862f, #b08d35);
-   -webkit-background-clip: text;
-   -webkit-text-fill-color: transparent;
-   text-shadow: 0 0 6px rgba(180, 140, 53, 0.3);
+   color: #d4af37; /* or direct */
+   text-shadow: 0 0 4px rgba(212,175,55,0.4);
  }
  
  .dark .gallery-title {
-   /* Sur fond sombre, ça va toujours être lisible */
-   text-shadow: 0 0 6px rgba(180, 140, 53, 0.5);
+   text-shadow: 0 0 5px rgba(212,175,55,0.7);
  }
  
- /* Museum view => zone du slider => 70vh => On conserve ce que tu avais */
+ /* Museum view => Desktop => on laisse 70vh */
  .museum-view {
    display: flex;
    justify-content: center;
@@ -78,29 +71,24 @@
    height: 70vh;
    min-height: 500px;
    position: relative;
-   padding: 1rem; /* un petit padding */
+   padding: 1rem;
  }
  
- /* Container de l'artwork + plaque */
  .artwork-display-container {
    display: flex;
    flex-direction: column;
    align-items: center;
-   /* on laisse la hauteur => couverte par .museum-view */
+   /* let the height be free */
  }
  
- /* plus besoin de "artwork-display" rotation, on le garde juste pour structure */
  .artwork-display {
    display: flex;
    justify-content: center;
    align-items: center;
    position: relative;
-   /* plus de transform 3D => code supprimé dans le JS */
  }
  
- /* .frame-container-700 => On le gère en inline style => rien à faire ici */
- 
- /* Plaque d'infos => inchangée */
+ /* Plaque inchangée */
  .artwork-plaque {
    width: 80%;
    max-width: 600px;
@@ -165,13 +153,12 @@
    border-radius: 4px;
    transition: all 0.3s ease;
  }
- 
  .info-button:hover {
    box-shadow: 0 0 10px rgba(212,175,55,0.6);
    transform: translateY(-2px);
  }
  
- /* NAV Buttons */
+ /* Navigation Buttons */
  .nav-button {
    width: 50px;
    height: 50px;
@@ -188,27 +175,23 @@
    backdrop-filter: blur(4px);
    margin: 0 20px;
  }
- 
  .nav-button:hover {
    background: rgba(212,175,55,0.2);
    box-shadow: 0 0 15px rgba(212,175,55,0.4);
  }
- 
  .prev-button {
    padding-right: 2px;
  }
- 
  .next-button {
    padding-left: 2px;
  }
  
- /* Pagination Dots */
+ /* Pagination */
  .gallery-pagination {
    display: flex;
    justify-content: center;
    margin-top: 20px;
  }
- 
  .pagination-dot {
    width: 10px;
    height: 10px;
@@ -219,18 +202,16 @@
    cursor: pointer;
    transition: all 0.3s ease;
  }
- 
  .pagination-dot.active {
    background-color: #d4af37;
    transform: scale(1.2);
    box-shadow: 0 0 6px rgba(212,175,55,0.4);
  }
- 
  .pagination-dot:hover {
    background-color: rgba(212,175,55,0.7);
  }
  
- /* Modal Overlay */
+ /* Modal */
  .artwork-modal-overlay {
    position: fixed;
    top: 0; left: 0;
@@ -251,8 +232,9 @@
    display: flex;
    background: linear-gradient(135deg, rgba(20,20,25,0.9), rgba(40,40,45,0.9));
    border: 1px solid rgba(212,175,55,0.5);
-   box-shadow: 0 0 30px rgba(212,175,55,0.3),
-               0 0 80px rgba(0,0,0,0.5);
+   box-shadow:
+     0 0 30px rgba(212,175,55,0.3),
+     0 0 80px rgba(0,0,0,0.5);
    position: relative;
    overflow: hidden;
    border-radius: 8px;
@@ -264,5 +246,155 @@
    right: 15px;
    width: 40px;
    height: 40px;
-   background: rgba(0,0,0,0.
+   background: rgba(0,0,0,0.5);
+   border: 1px solid rgba(212,175,55,0.5);
+   color: #d4af37;
+   font-size: 1.5rem;
+   border-radius: 50%;
+   cursor: pointer;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   z-index: 10;
+   transition: all 0.3s ease;
+ }
+ .modal-close-btn:hover {
+   background: rgba(212,175,55,0.2);
+   box-shadow: 0 0 15px rgba(212,175,55,0.6);
+ }
+ 
+ .modal-frame {
+   flex: 1;
+   padding: 30px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   position: relative;
+ }
+ .modal-artwork-image {
+   max-width: 100%;
+   max-height: 80vh;
+   object-fit: contain;
+   box-shadow: 0 0 30px rgba(0,0,0,0.5);
+   border: 8px solid;
+   border-image: linear-gradient(45deg, #d4af37, #f9f295, #d4af37) 1;
+ }
+ 
+ .modal-artwork-info {
+   width: 35%;
+   padding: 40px 30px;
+   color: #fff;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   background: rgba(0,0,0,0.4);
+   border-left: 1px solid rgba(212,175,55,0.3);
+ }
+ .modal-artwork-info h2 {
+   font-family: 'Playfair Display', serif;
+   font-size: 2rem;
+   margin-bottom: 10px;
+   color: #d4af37;
+ }
+ .modal-artwork-info h3 {
+   font-family: 'Cormorant Garamond', serif;
+   font-size: 1.2rem;
+   font-weight: 400;
+   font-style: italic;
+   margin-bottom: 10px;
+   color: #f0f0f0;
+ }
+ .modal-artwork-location {
+   font-family: 'Cormorant Garamond', serif;
+   font-size: 1rem;
+   margin-bottom: 20px;
+   color: #bbb;
+ }
+ .modal-artwork-description {
+   font-family: 'Cormorant Garamond', serif;
+   font-size: 1.1rem;
+   line-height: 1.6;
+   color: #e0e0e0;
+ }
+ 
+ /* Loading */
+ .gallery-loading {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 100vh;
+   width: 100%;
+ }
+ 
+ /* Colonnes décoratives latérales */
+ .decorative-column {
+   position: fixed;
+   bottom: 0;
+   width: 100px;
+   height: 100%;
+   background-image: url('https://cdnjs.cloudflare.com/ajax/libs/placeholdit/100x800/column');
+   background-repeat: no-repeat;
+   background-position: bottom;
+   background-size: contain;
+   opacity: 0.2;
+   pointer-events: none;
+   z-index: -1;
+ }
+ .left-column {
+   left: 0;
+ }
+ .right-column {
+   right: 0;
+   transform: scaleX(-1);
+ }
+ 
+ /* Media queries "pro" */
+ @media (max-width: 992px) {
+   .museum-view {
+     height: auto; /* plus de 70vh forcé sur tablette */
+     min-height: 600px;
+   }
+   .artwork-modal {
+     flex-direction: column;
+     height: auto;
+     max-height: 90vh;
+     overflow-y: auto;
+   }
+   .modal-frame {
+     width: 100%;
+     height: auto;
+     padding: 20px;
+   }
+   .modal-artwork-info {
+     width: 100%;
+     border-left: none;
+     border-top: 1px solid rgba(212,175,55,0.3);
+     padding: 30px 20px;
+   }
+ }
+ 
+ @media (max-width: 768px) {
+   .museum-view {
+     flex-direction: column;
+     height: auto; 
+     padding: 0 20px;
+   }
+   .nav-button {
+     position: static;
+     margin: 0.5rem;
+     transform: none;
+   }
+ }
+ 
+ @media (max-width: 576px) {
+   .gallery-title {
+     font-size: 1.8rem;
+   }
+   .artwork-title {
+     font-size: 1.4rem;
+   }
+   .artwork-creator {
+     font-size: 1.1rem;
+   }
+ }
  

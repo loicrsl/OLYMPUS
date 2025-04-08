@@ -10,3 +10,7 @@ olympus-project/
 ├── styles/ # 2 fichiers de style (globals.css, animations.css) 
 ├── utils/ # 3 fichiers utilitaires (data.js, portfolio-data.js, scroll-sections.js) ├── README.md # Ce fichier 
 └── package.json # Configuration du projet et dépendances
+
+git add .
+git commit -m "Update: PLACEHOLDER"
+git push origin master

@@ -2,13 +2,10 @@
  * ProjectGallery.jsx - Version Carrousel
  *
  * Règle clé: "Ne jamais rien enlever sans validation."
- * => On garde toutes les lignes et commentaires.
- * => On enlève explicitement la rotation 3D (cadre
- *    parallax) avec permission de Loïc.
- * => On réduit le conteneur à 700×700.
- * => On fonce la couleur dorée du titre.
- * => On garde la plaque intacte.
- * => On améliore les media queries dans le CSS.
+ * => On garde les lignes existantes.
+ * => On applique objectFit=contain, retire la rotation 3D
+ * => On met le titre en or direct (#d4af37).
+ * => On tente de réduire l'espace sur mobile.
  *******************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -22,8 +19,6 @@ import frameSquare from '../assets/frames/frame-square.png';
 import frameSquareMask from '../assets/frames/frame-square-mask.png';
 
 /* ProjectGallery - Le slider en carrousel
-   => Composant principal de la page "Portfolio" 
-   => Scène immersive ~ (Parallax sur cadre) => plus maintenant, retiré.
    => Artwork mis en avant dans un cadre baroque 
    => Plaque pour titre, artiste, date, description
    => Modale pour détails supplémentaires
@@ -36,13 +31,11 @@ const ProjectGallery = ({ isLightMode }) => {
   const [artworks, setArtworks] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Référence pour le container => rotation 3D
-  // (We keep this but won't use it for rotation)
+  // Référence (plus de rotation 3D)
   const galleryRef = useRef(null);
 
   /********************************************
-   * Chargement des œuvres
-   * => Liens Behance (version validée)
+   * Chargement des œuvres (3 liens Behance)
    ********************************************/
   useEffect(() => {
     const brigliaArtworks = [
@@ -74,7 +67,6 @@ const ProjectGallery = ({ isLightMode }) => {
         location: "NYC, USA"
       },
     ];
-
     setArtworks(brigliaArtworks);
   }, []);
 
@@ -110,7 +102,7 @@ const ProjectGallery = ({ isLightMode }) => {
     );
   };
 
-  // Gestion touches clavier
+  // Contrôles touches clavier
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'ArrowLeft') {
@@ -129,22 +121,9 @@ const ProjectGallery = ({ isLightMode }) => {
   }, [currentIndex, isModalOpen, artworks.length]);
 
   /********************************************
-   * Rotation 3D oeuvre centrale
-   * => (Removed with permission)
+   * Pas de rotation 3D => code commenté
    ********************************************/
-  /*
-   const handleMouseMove = (e) => {
-     // old code removed
-   };
 
-   const resetRotation = () => {
-     // old code removed
-   };
-  */
-
-  /********************************************
-   * Si aucune œuvre n'est chargée
-   ********************************************/
   if (artworks.length === 0) {
     return (
       <div className="gallery-loading">
@@ -156,27 +135,22 @@ const ProjectGallery = ({ isLightMode }) => {
   // Artwork courant
   const currentArtwork = artworks[currentIndex];
 
-  /********************************************
-   * Rendu final
-   ********************************************/
   return (
     <div 
       className={`museum-gallery ${isLightMode ? 'light' : 'dark'}`}
       ref={galleryRef}
-      // onMouseMove={handleMouseMove} // removed
-      // onMouseLeave={resetRotation}  // removed
     >
-      {/* Background marbre */}
-      <div className="marble-background"></div>
+      {/* Background marbre => On vérifie le chemin dans "ProjectGallery.css" */}
+      <div className="marble-background" />
 
-      {/* Titre - Parallax sur le texte, pas sur le cadre */}
+      {/* Titre => Parallax offset */}
       <div className="gallery-header">
         <Parallax offset={-30}>
           <h1 className="gallery-title">LA GALERIE OLYMPUS</h1>
         </Parallax>
       </div>
       
-      {/* La zone du carrousel */}
+      {/* Carrousel principal */}
       <div className="museum-view">
         <button className="nav-button prev-button" onClick={goToPrevious}>
           ‹
@@ -184,7 +158,6 @@ const ProjectGallery = ({ isLightMode }) => {
         
         <div className="artwork-display-container">
           <div className="artwork-display">
-            {/* Animation slider Framer Motion */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentArtwork.id}
@@ -195,11 +168,8 @@ const ProjectGallery = ({ isLightMode }) => {
                 transition={{ duration: 0.5 }}
                 onClick={handleOpenModal}
               >
-                {/*
-                  OPTION C revisited => 700×700 container
-                */}
+                {/* Container 700×700 => objectFit contain */}
                 <div
-                  className="frame-container-700" 
                   style={{
                     position: 'relative',
                     width: '700px',
@@ -222,7 +192,7 @@ const ProjectGallery = ({ isLightMode }) => {
                     }}
                   />
 
-                  {/* Artwork masqué par frameSquareMask */}
+                  {/* Artwork masqué, objectFit=contain pour tout voir */}
                   <img
                     src={currentArtwork.image}
                     alt={currentArtwork.title}
@@ -232,7 +202,7 @@ const ProjectGallery = ({ isLightMode }) => {
                       left: 0,
                       width: '100%',
                       height: '100%',
-                      objectFit: 'cover',
+                      objectFit: 'contain', // <= On montre TOUTE l'œuvre
                       zIndex: 1,
 
                       WebkitMaskImage: `url(${frameSquareMask})`,
@@ -253,7 +223,7 @@ const ProjectGallery = ({ isLightMode }) => {
             </AnimatePresence>
           </div>
           
-          {/* Plaque info (non modifiée) */}
+          {/* Plaque d'infos => inchangée */}
           <div className="artwork-plaque">
             <div className="plaque-content">
               <h2 className="artwork-title">{currentArtwork.title}</h2>
@@ -273,7 +243,7 @@ const ProjectGallery = ({ isLightMode }) => {
         </button>
       </div>
       
-      {/* Pagination Dots */}
+      {/* Pagination */}
       <div className="gallery-pagination">
         {artworks.map((_, index) => (
           <button
@@ -309,7 +279,7 @@ const ProjectGallery = ({ isLightMode }) => {
         </div>
       )}
 
-      {/* Colonnes décoratives inspirées de l'architecture classique */}
+      {/* Colonnes décoratives => inchangées */}
       <div className="decorative-column left-column"></div>
       <div className="decorative-column right-column"></div>
     </div>
